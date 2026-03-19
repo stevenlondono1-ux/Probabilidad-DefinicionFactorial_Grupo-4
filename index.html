@@ -4,12 +4,6 @@
     <meta charset="UTF-8">
     <title>Módulo Para Orientar Probabilidad - Factorial</title>
 
-    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/f<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Módulo Para Orientar Probabilidad - Factorial</title>
-
     <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Escudo-UdeA.svg/500px-Escudo-UdeA.svg.png" type="image/png">
     <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Escudo-UdeA.svg/500px-Escudo-UdeA.svg.png">
 
@@ -135,14 +129,14 @@
         .footer-box p {
             color: #ffffff;
             font-size: 1.3em;
-            font-weight: 800; /* Letra muy clara y gruesa */
+            font-weight: 800;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
             margin: 0;
             letter-spacing: 0.5px;
         }
 
         .footer-box span {
-            color: #ffcc00; /* Color dorado para el curso */
+            color: #ffcc00;
             text-transform: uppercase;
         }
     </style>
@@ -198,7 +192,7 @@
         </div>
     </div>
 
-    <!-- Footer con el diseño solicitado -->
+    <!-- FOOTER AÑADIDO - SOLO ESTO ES NUEVO -->
     <footer class="footer-udea">
         <div class="footer-box">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Escudo-UdeA.svg/500px-Escudo-UdeA.svg.png" alt="UdeA">
@@ -212,7 +206,7 @@
         let puntos = 0;
         let preguntasActuales = [];
 
-        // ===== FUNCIÓN QUE FALTABA PARA CAMBIAR DE SESIÓN =====
+        // FUNCIÓN AÑADIDA - ESTO ES LO ÚNICO NUEVO EN EL SCRIPT
         function cambiarSesion(n) {
             // Ocultar todas las sesiones
             document.getElementById('sesion1').style.display = 'none';
@@ -227,283 +221,6 @@
             if(n === 4) {
                 generarEjerciciosAleatorios();
             }
-        }
-
-        function ejecutarCalculo() {
-            let n = parseInt(document.getElementById('numInput').value);
-            if(n < 0 || isNaN(n)) { alert("Ingresa un número válido"); return; }
-            let r = 1; for(let i=n; i>1; i--) r *= i;
-            document.getElementById('resCalc').innerText = n + "! = " + r;
-        }
-
-        const banco = [
-            {q: "¿3!?", a: 6}, {q: "¿4!?", a: 24}, {q: "¿5!?", a: 120}, {q: "¿0!?", a: 1},
-            {q: "6!", a: 720}, {q: "2!", a: 2}, {q: "5! / 4!", a: 5}, {q: "3! * 2!", a: 12}
-        ];
-
-        function generarEjerciciosAleatorios() {
-            puntos = 0; 
-            actualizarUI();
-            let container = document.getElementById('ejercicios');
-            container.innerHTML = "";
-            let shuffle = [...banco].sort(() => 0.5 - Math.random());
-            preguntasActuales = shuffle.slice(0, 5); // 5 preguntas por ronda para agilizar
-            
-            preguntasActuales.forEach((p, i) => {
-                container.innerHTML += `<div style='margin-bottom:10px;'>${p.q} = <input type='number' id='ans${i}' style='width:80px'> 
-                <button onclick='validar(${i}, ${p.a})'>OK</button><span id='fb${i}'></span></div>`;
-            });
-        }
-
-        function validar(idx, correct) {
-            let userAns = parseInt(document.getElementById('ans'+idx).value);
-            let fb = document.getElementById('fb'+idx);
-            if(userAns === correct) {
-                fb.innerHTML = " ✅"; fb.className = "correcto";
-                puntos++; document.getElementById('sonidoCorrecto').play();
-            } else {
-                fb.innerHTML = " ❌"; fb.className = "incorrecto";
-            }
-            actualizarUI();
-        }
-
-        function actualizarUI() {
-            document.getElementById('puntos').innerText = puntos;
-            let perc = (puntos / preguntasActuales.length) * 100;
-            document.getElementById('barra').style.width = perc + "%";
-            if(puntos === preguntasActuales.length) document.getElementById('final').style.display = 'block';
-        }
-
-        function descargarCertificadoPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('l', 'px', [600, 400]);
-            doc.text("CERTIFICADO DE LOGRO", 300, 100, {align: "center"});
-            doc.text("Por completar el Módulo de Factorial", 300, 150, {align: "center"});
-            doc.text("Seminario de la Estadística - UdeA", 300, 200, {align: "center"});
-            doc.save("Certificado_UdeA.pdf");
-        }
-
-        // Partículas
-        function createParticles() {
-            const container = document.getElementById('particles');
-            for(let i=0; i<15; i++) {
-                let p = document.createElement('div');
-                p.className = 'particle';
-                p.style.left = Math.random() * 100 + "%";
-                p.style.width = p.style.height = (Math.random()*15 + 5) + "px";
-                p.style.animationDelay = Math.random() * 5 + "s";
-                container.appendChild(p);
-            }
-        }
-        createParticles();
-    </script>
-</body>
-</html>/fb/Escudo-UdeA.svg/500px-Escudo-UdeA.svg.png" type="image/png">
-    <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Escudo-UdeA.svg/500px-Escudo-UdeA.svg.png">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6b8cff 100%);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .escudo-udea {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 100px;
-            height: 100px;
-            background: white url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Escudo-UdeA.svg/500px-Escudo-UdeA.svg.png') no-repeat center;
-            background-size: 70%;
-            z-index: 9999;
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-            animation: escudoBrillo 3s ease-in-out infinite;
-        }
-
-        @keyframes escudoBrillo {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px gold); }
-            50% { transform: scale(1.05); filter: drop-shadow(0 0 25px gold); }
-        }
-
-        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-        .particle { position: absolute; background: rgba(255, 255, 255, 0.3); border-radius: 50%; animation: particleFloat 8s infinite; }
-
-        @keyframes particleFloat {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            color: #2c3e50;
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 40px;
-            border-radius: 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-            position: relative;
-            z-index: 100;
-        }
-
-        h1 { font-size: 2.5em; margin-bottom: 20px; color: #764ba2; }
-        h2 { color: #667eea; margin-bottom: 15px; }
-        p { line-height: 1.6; margin-bottom: 15px; }
-
-        button {
-            padding: 12px 25px;
-            margin: 10px;
-            border: none;
-            border-radius: 50px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-
-        input { padding: 10px; border-radius: 20px; border: 2px solid #ddd; text-align: center; margin: 10px; }
-
-        .progress-container { width: 100%; background: #eee; border-radius: 50px; height: 20px; margin: 20px 0; overflow: hidden; }
-        .progress-bar { height: 100%; background: #00f2fe; width: 0%; transition: 0.5s; }
-
-        #ejercicios { background: #f9f9f9; padding: 20px; border-radius: 15px; margin: 20px 0; }
-        .correcto { color: #27ae60; font-weight: bold; }
-        .incorrecto { color: #e74c3c; font-weight: bold; }
-
-        /* ESTILO DEL MENSAJE INFERIOR MEJORADO */
-        .footer-udea {
-            margin-top: 50px;
-            padding-bottom: 40px;
-            position: relative;
-            z-index: 100;
-        }
-
-        .footer-box {
-            display: inline-flex;
-            flex-direction: column;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 25px 40px;
-            border-radius: 25px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        .footer-box img {
-            width: 80px;
-            background: white;
-            padding: 8px;
-            border-radius: 50%;
-            margin-bottom: 15px;
-        }
-
-        .footer-box p {
-            color: #ffffff;
-            font-size: 1.3em;
-            font-weight: 800; /* Letra muy clara y gruesa */
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
-            margin: 0;
-            letter-spacing: 0.5px;
-        }
-
-        .footer-box span {
-            color: #ffcc00; /* Color dorado para el curso */
-            text-transform: uppercase;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="particles" id="particles"></div>
-    <div class="escudo-udea"></div>
-
-    <div class="container">
-        <div id="sesion1">
-            <h1><i class="fas fa-calculator"></i> Módulo Probabilidad</h1>
-            <h2>Factorial de un número</h2>
-            <img src="https://raw.githubusercontent.com/stevenlondono1-ux/Imagenes/refs/heads/main/0158b827-5974-419b-8ccc-5722135b2f44.png" style="width:100%; max-width:500px; border-radius:20px; margin: 20px 0;">
-            <br>
-            <button onclick="cambiarSesion(2)">Comenzar <i class="fas fa-arrow-right"></i></button>
-        </div>
-
-        <div id="sesion2" style="display:none;">
-            <h2><i class="fas fa-book"></i> Definiciones</h2>
-            <p>El factorial de <b>n (n!)</b> es el producto de todos los enteros positivos desde 1 hasta n.</p>
-            <p>Ejemplo: 4! = 4 × 3 × 2 × 1 = 24</p>
-            
-            <audio id="audio1" controls><source src="https://cdn.jsdelivr.net/gh/stevenlondono1-ux/factorial-game-audios/definicion.mp3"></audio>
-            <br><br>
-            <button onclick="cambiarSesion(1)">Inicio</button>
-            <button onclick="cambiarSesion(3)">Calculadora</button>
-        </div>
-
-        <div id="sesion3" style="display:none;">
-            <h2>Calculadora de Factorial</h2>
-            <input type="number" id="numInput" placeholder="Número">
-            <button onclick="ejecutarCalculo()">Calcular</button>
-            <p id="resCalc" style="font-weight:bold; color:#764ba2;"></p>
-            <br>
-            <button onclick="cambiarSesion(2)">Volver</button>
-            <button onclick="cambiarSesion(4)">¡A Jugar!</button>
-        </div>
-
-        <div id="sesion4" style="display:none;">
-            <h2><i class="fas fa-star"></i> Desafío Factorial</h2>
-            <div id="ejercicios"></div>
-            <div class="progress-container"><div class="progress-bar" id="barra"></div></div>
-            <p>Puntos: <span id="puntos">0</span>/12</p>
-            
-            <div id="final" style="display:none; background: #e8f5e9; padding: 15px; border-radius: 15px;">
-                <h3>¡Excelente trabajo!</h3>
-                <button onclick="descargarCertificadoPDF()">Descargar Certificado</button>
-            </div>
-            <br>
-            <button onclick="generarEjerciciosAleatorios()">Nuevos Ejercicios</button>
-            <button onclick="cambiarSesion(1)">Salir</button>
-        </div>
-    </div>
-
-    <!-- ===== SOLO AÑADÍ ESTE FOOTER, TODO LO DEMÁS QUEDA IGUAL ===== -->
-    <footer class="footer-udea">
-        <div class="footer-box">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Escudo-UdeA.svg/500px-Escudo-UdeA.svg.png" alt="UdeA">
-            <p>Diseñado por estudiantes del curso<br><span>Seminario de la Estadística</span></p>
-        </div>
-    </footer>
-
-    <audio id="sonidoCorrecto"><source src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
-
-    <script>
-        let puntos = 0;
-        let preguntasActuales = [];
-
-        function cambiarSesion(n) {
-            for(let i=1; i<=4; i++) document.getElementById('sesion'+i).style.display = 'none';
-            document.getElementById('sesion'+n).style.display = 'block';
-            if(n === 4) generarEjerciciosAleatorios();
         }
 
         function ejecutarCalculo() {
