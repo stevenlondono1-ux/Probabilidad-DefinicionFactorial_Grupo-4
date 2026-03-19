@@ -150,7 +150,7 @@
         <div id="sesion1">
             <h1><i class="fas fa-calculator"></i> Módulo Probabilidad</h1>
             <h2>Factorial de un número</h2>
-            <img src="https://raw.githubusercontent.com/stevenlondono1-ux/Imagenes/refs/heads/main/0158b827-5974-419b-8ccc-5722135b2f44.png" style="width:100%; max-width:500px; border-radius:20px; margin: 20px 0;">
+            <img src="https://raw.githubusercontent.com/stevenlondono1-ux/Imagenes/refs/heads/main/0158b827-5974-419b-8ccc-5722135b2f44.png" style="width:100%; max-width:500px; border-radius:20px; margin: 20px 0;" alt="Introducción al factorial">
             <br>
             <button onclick="cambiarSesion(2)">Comenzar <i class="fas fa-arrow-right"></i></button>
         </div>
@@ -160,7 +160,8 @@
             <p>El factorial de <b>n (n!)</b> es el producto de todos los enteros positivos desde 1 hasta n.</p>
             <p>Ejemplo: 4! = 4 × 3 × 2 × 1 = 24</p>
             
-            <audio id="audio1" controls><source src="https://cdn.jsdelivr.net/gh/stevenlondono1-ux/factorial-game-audios/definicion.mp3"></audio>
+            <!-- Audio comentado porque la URL daba error 404. Si tienes el archivo, usa una ruta local o una URL válida. -->
+            <!-- <audio id="audio1" controls><source src="https://cdn.jsdelivr.net/gh/stevenlondono1-ux/factorial-game-audios/definicion.mp3"></audio> -->
             <br><br>
             <button onclick="cambiarSesion(1)">Inicio</button>
             <button onclick="cambiarSesion(3)">Calculadora</button>
@@ -168,7 +169,7 @@
 
         <div id="sesion3" style="display:none;">
             <h2>Calculadora de Factorial</h2>
-            <input type="number" id="numInput" placeholder="Número">
+            <input type="number" id="numInput" placeholder="Número" min="0">
             <button onclick="ejecutarCalculo()">Calcular</button>
             <p id="resCalc" style="font-weight:bold; color:#764ba2;"></p>
             <br>
@@ -180,7 +181,7 @@
             <h2><i class="fas fa-star"></i> Desafío Factorial</h2>
             <div id="ejercicios"></div>
             <div class="progress-container"><div class="progress-bar" id="barra"></div></div>
-            <p>Puntos: <span id="puntos">0</span>/12</p>
+            <p>Puntos: <span id="puntos">0</span>/<span id="totalPreguntas">0</span></p>
             
             <div id="final" style="display:none; background: #e8f5e9; padding: 15px; border-radius: 15px;">
                 <h3>¡Excelente trabajo!</h3>
@@ -199,66 +200,123 @@
         </div>
     </footer>
 
-    <audio id="sonidoCorrecto"><source src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
+    <!-- Audio para respuestas correctas -->
+    <audio id="sonidoCorrecto"><source src="https://www.soundjay.com/buttons/sounds/button-3.mp3" type="audio/mpeg"></audio>
 
     <script>
         let puntos = 0;
         let preguntasActuales = [];
+        const banco = [
+            {q: "¿3!?", a: 6}, {q: "¿4!?", a: 24}, {q: "¿5!?", a: 120}, {q: "¿0!?", a: 1},
+            {q: "¿6!?", a: 720}, {q: "¿2!?", a: 2}, {q: "¿5! / 4!?", a: 5}, {q: "¿3! * 2!?", a: 12}
+        ];
 
         function cambiarSesion(n) {
-            for(let i=1; i<=4; i++) document.getElementById('sesion'+i).style.display = 'none';
-            document.getElementById('sesion'+n).style.display = 'block';
-            if(n === 4) generarEjerciciosAleatorios();
+            // Oculta todas las sesiones
+            for(let i = 1; i <= 4; i++) {
+                document.getElementById('sesion' + i).style.display = 'none';
+            }
+            // Muestra la sesión seleccionada
+            document.getElementById('sesion' + n).style.display = 'block';
+            
+            // Si la sesión es la de juegos, genera ejercicios
+            if(n === 4) {
+                generarEjerciciosAleatorios();
+            }
         }
 
         function ejecutarCalculo() {
-            let n = parseInt(document.getElementById('numInput').value);
-            if(n < 0 || isNaN(n)) { alert("Ingresa un número válido"); return; }
-            let r = 1; for(let i=n; i>1; i--) r *= i;
+            let n = parseInt(document.getElementById('numInput').value, 10);
+            if(n < 0 || isNaN(n)) { 
+                alert("Ingresa un número válido (entero positivo)"); 
+                return; 
+            }
+            let r = 1; 
+            for(let i = n; i > 1; i--) { 
+                r *= i; 
+            }
             document.getElementById('resCalc').innerText = n + "! = " + r;
         }
 
-        const banco = [
-            {q: "¿3!?", a: 6}, {q: "¿4!?", a: 24}, {q: "¿5!?", a: 120}, {q: "¿0!?", a: 1},
-            {q: "6!", a: 720}, {q: "2!", a: 2}, {q: "5! / 4!", a: 5}, {q: "3! * 2!", a: 12}
-        ];
-
         function generarEjerciciosAleatorios() {
-            puntos = 0; actualizarUI();
+            puntos = 0; // Reinicia puntos
+            // Mezcla el banco y selecciona las primeras 5 preguntas
+            let shuffle = [...banco].sort(() => 0.5 - Math.random());
+            preguntasActuales = shuffle.slice(0, 5); 
+            
+            renderizarEjercicios();
+            actualizarUI(); // Actualiza la UI después de reiniciar
+        }
+
+        function renderizarEjercicios() {
             let container = document.getElementById('ejercicios');
             container.innerHTML = "";
-            let shuffle = [...banco].sort(() => 0.5 - Math.random());
-            preguntasActuales = shuffle.slice(0, 5); // 5 preguntas por ronda para agilizar
             
             preguntasActuales.forEach((p, i) => {
-                container.innerHTML += `<div style='margin-bottom:10px;'>${p.q} = <input type='number' id='ans${i}' style='width:80px'> 
-                <button onclick='validar(${i}, ${p.a})'>OK</button><span id='fb${i}'></span></div>`;
+                // Crear elementos de forma más estructurada (alternativa a innerHTML)
+                const div = document.createElement('div');
+                div.style.marginBottom = '10px';
+                div.innerHTML = `${p.q} = <input type='number' id='ans${i}' style='width:80px' min='0'> 
+                <button onclick='validar(${i}, ${p.a})'>OK</button><span id='fb${i}'></span>`;
+                container.appendChild(div);
             });
+            
+            // Actualizar el total de preguntas en el marcador
+            document.getElementById('totalPreguntas').innerText = preguntasActuales.length;
         }
 
         function validar(idx, correct) {
-            let userAns = parseInt(document.getElementById('ans'+idx).value);
-            let fb = document.getElementById('fb'+idx);
-            if(userAns === correct) {
-                fb.innerHTML = " ✅"; fb.className = "correcto";
-                puntos++; document.getElementById('sonidoCorrecto').play();
-            } else {
-                fb.innerHTML = " ❌"; fb.className = "incorrecto";
+            let inputElement = document.getElementById('ans' + idx);
+            let userAns = parseInt(inputElement.value, 10);
+            let fb = document.getElementById('fb' + idx);
+            
+            // Validar si la entrada es un número
+            if (isNaN(userAns)) {
+                fb.innerHTML = " ❌ Ingresa un número";
+                fb.className = "incorrecto";
+                return;
             }
+            
+            if(userAns === correct) {
+                fb.innerHTML = " ✅ ¡Correcto!";
+                fb.className = "correcto";
+                
+                // Incrementar puntos y reproducir sonido solo si la respuesta es correcta y no se había respondido antes (opcional)
+                // Para evitar sumar puntos si se presiona OK varias veces, podríamos deshabilitar el botón. 
+                // Por simplicidad, lo dejamos así, pero en una app real se debería controlar.
+                puntos++; 
+                
+                // Reproducir sonido (manejo de promesa para evitar errores en consola)
+                let audio = document.getElementById('sonidoCorrecto');
+                audio.play().catch(e => console.log("Reproducción automática bloqueada:", e));
+                
+            } else {
+                fb.innerHTML = " ❌ Incorrecto. Intenta de nuevo.";
+                fb.className = "incorrecto";
+            }
+            
             actualizarUI();
         }
 
         function actualizarUI() {
             document.getElementById('puntos').innerText = puntos;
-            let perc = (puntos / preguntasActuales.length) * 100;
-            document.getElementById('barra').style.width = perc + "%";
-            if(puntos === preguntasActuales.length) document.getElementById('final').style.display = 'block';
+            let porcentaje = (puntos / preguntasActuales.length) * 100;
+            document.getElementById('barra').style.width = porcentaje + "%";
+            
+            // Mostrar mensaje de finalización si todos los puntos están completados
+            if(puntos === preguntasActuales.length && preguntasActuales.length > 0) {
+                document.getElementById('final').style.display = 'block';
+            } else {
+                document.getElementById('final').style.display = 'none';
+            }
         }
 
         function descargarCertificadoPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('l', 'px', [600, 400]);
+            doc.setFontSize(22);
             doc.text("CERTIFICADO DE LOGRO", 300, 100, {align: "center"});
+            doc.setFontSize(16);
             doc.text("Por completar el Módulo de Factorial", 300, 150, {align: "center"});
             doc.text("Seminario de la Estadística - UdeA", 300, 200, {align: "center"});
             doc.save("Certificado_UdeA.pdf");
@@ -267,11 +325,11 @@
         // Partículas
         function createParticles() {
             const container = document.getElementById('particles');
-            for(let i=0; i<15; i++) {
+            for(let i = 0; i < 15; i++) {
                 let p = document.createElement('div');
                 p.className = 'particle';
                 p.style.left = Math.random() * 100 + "%";
-                p.style.width = p.style.height = (Math.random()*15 + 5) + "px";
+                p.style.width = p.style.height = (Math.random() * 15 + 5) + "px";
                 p.style.animationDelay = Math.random() * 5 + "s";
                 container.appendChild(p);
             }
